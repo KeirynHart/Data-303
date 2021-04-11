@@ -1,0 +1,268 @@
+---
+title: "assignment4"
+author: "Keiryn Hart, 300428418"
+date: "29/06/2020"
+output: pdf_document
+
+---
+
+```{r}
+# Load the "readxl" package to read in data from an Excel file.
+library(readxl)
+
+# Read in the heart disease dataset.
+hd <- read_xlsx("C:/Users/Keiryn Hart/Documents/Uni/Data 303/Heart Disease.xlsx", sheet = "Data", na = "NA")
+```
+
+
+Question 1:
+a)
+
+```{r}
+ncol(hd)
+k <- 16
+i <- 1
+fr.prop <- data.frame(c("Frequency (n)", "Proportion (p)"))
+colnames(fr.prop) <- "Variable"
+for(i in 1:k){
+  count <- sum(is.na(hd[,i]))
+  prop <- count/nrow(hd)
+  results <- data.frame(c(count, prop))
+  fr.prop <- cbind(fr.prop, results)
+  colnames(fr.prop)[i+1] <- paste("VARIABLE", i, sep= "_")
+}
+
+fr.prop
+```
+
+b)
+
+```{r}
+hd.complete <- na.omit(hd)
+missing <- nrow(hd) - nrow(hd.complete)
+missing/nrow(hd)
+
+```
+
+c)
+
+```{r}
+hd.complete[, "SBP_CAT"] <- NA
+a <- nrow(hd.complete)
+for(i in 1:a){
+  if(hd.complete$SBP[i] < 120){
+    hd.complete$SBP_CAT[i] <- "normal"
+  }
+  else if(hd.complete$SBP[i] > 119 & hd.complete$SBP[i] < 130){
+    hd.complete$SBP_CAT[i] <- "elevated"
+  }
+  else if(hd.complete$SBP[i] > 129 & hd.complete$SBP[i] < 140){
+    hd.complete$SBP_CAT[i] <- "High Stage 1"
+  }
+  else if(hd.complete$SBP[i] > 139 & hd.complete$SBP[i] < 180){
+    hd.complete$SBP_CAT[i] <- "High Stage 2"
+  }
+  else{
+    hd.complete$SBP_CAT[i] <- "hypertensive crisis"
+  }
+}
+
+hd.complete
+```
+
+d)
+because it can provide meaninful qualitative differences where the cut off points for the different levels of the predictor can reflect better levels for the model predictions.
+```{r}
+
+```
+
+
+Question 2:
+
+a)
+```{r}
+logistic <-  glm(HD_RISK ~ SBP + DBP + factor(SEX) + AGE + factor(EDUC) + CIG + CHOL + BMI + GLUC, family = binomial, data = hd.complete)
+summary(logistic)
+```
+
+```{r}
+library(car)
+library(kableExtra)
+kable(vif(logistic), digits = 2, caption = "VIF Values")%>%
+  kable_styling()
+```
+none of the vif values exceed 1.74 and all are clearly far below 10 which indicates that there is little evidence relationg to mulitcoliniarity of the predictors and therefore there is no need to remove any of the predictors.
+
+b)
+
+regression equation:
+
+#log(p^/1-p^) = HD_RISK + 0.0183*SBP - 0.00280*DBP + 0.544*factor(SEX)1 + 0.0634*AGE - 0.189*factor(SEX)2 - 0.197*factor(SEX)3 - 0.0521*factor(SEX)4 + 0.195*CIG + 0.00237*CHOL + 0.00671*BMI + 0.00719*GLUC
+
+```{r}
+library(pander)
+pander(summary(logistic))
+```
+
+c)
+
+Walds tests:
+SBP:
+
+Hypothesis:
+H0:β1 = 0
+H1:β1 ≠ 0
+
+test statistic:
+5.238
+
+p-value:
+1.63e-07
+
+given the fact that the p-value for SBP is significantly smaller than any significance level in consideration we have enough evidence to suggest that B1 is significantly different from 0 and therefore SBP is statistically significant as a predictor of a 10 year risk of Coronary Heart disease.
+
+DBP:
+
+Hypothesis:
+H0:β2 = 0
+H1:β2 ≠ 0
+
+Test statistic:
+-0.438
+
+p-value:
+0.6612
+
+Considering that the p-value for DBP is quite large and it exceeds any significance level, a conclusion can be formed that B2 is not significantly different from 0 which means that the effect of DBP does not appear to be a statistically significant for 10 year risk of coronary heart disease.
+
+
+d)
+an increase of 1mm Hg in SBP is associated with an estimated multiplicative change of exp(0.018249) as shown below. The resulting figure corresponds to a roughly 2% increase in the odds of having a 10 year risk of future coronary heart disease.
+```{r}
+exp(0.018249)
+kable(exp(confint.default(logistic, parm = "SBP")), digits = 3)%>%
+  kable_styling()
+```
+e)
+
+```{r}
+hd.complete$SBP_CAT <- factor(hd.complete$SBP_CAT, levels = c("normal", "elevated", "High Stage 1", "High Stage 2", "hypertensive crisis"))
+logistic2 <- glm(HD_RISK ~ factor(SBP_CAT) + DBP + factor(SEX) + AGE + factor(EDUC) + CIG + CHOL + BMI + GLUC, family = binomial, data = hd.complete)
+summary(logistic2)
+
+```
+ii)
+
+```{r}
+elevated <- exp(0.234938)
+High1 <- exp(0.189517)
+High2 <- exp(0.592431)
+hypertensive <- exp(1.155536)
+
+elevated 
+High1 
+High2 
+hypertensive
+```
+
+SBP_CAT:
+
+
+elevated:
+
+the p-value for the elevated level is 0.146609, this is quite large and it exceeds any significance level which means we have evidence to suggest that B1 is not significantly different from 0 which indicates that an elevated SBP level is not statistically significant in predicting a 10 year risk of coronary heart disease.
+
+effect:
+
+for the elevated level of SBP_CAT, having Systolic blood pressure in this range is associated with an estimated multiplicative change of exp(0.234938) which corresponds to roughly a 26% increase from a normal level in the odds of having future coronary heart disease.
+
+
+High stage 1:
+
+the p-value for high stage 1 is 0.286746, this is also a large p-value and is even larger than that of the elevated category. similarly to elevated it exceeds all significance levels and therefore B1 is not significantly different from 0 and in turn is not statistically significant in predicting a 10 year risk of coronary heart disease.
+
+effect:
+
+for the High stage 1 level, having having Systolic blood pressure in this range is associated with an estimated multiplicative change of exp(0.189517) which corresponds to roughly a 20% increase from the normal level in the odds of having future coronary heart disease.
+
+High stage 2:
+
+the p-value for high stage 2 is 0.001310, this p-value is very small and is alot smaller than any significance level, from this we can confirm that there is evidence to suggest that B1 is significantly different from 0 meaning that high stage 2 of SBP_CAT is statistically significant in predicting a 10 year risk of coronary heart disease.
+
+effect:
+
+for the High stage 2 level, having having Systolic blood pressure in this range is associated with an estimated multiplicative change of exp(0.592431) which corresponds to roughly a 217% increase from the normal level in the odds of having future coronary heart disease.
+
+
+hypertensive crisis:
+
+the p-value for hypertensive crisis is 0.000107, again this p-value is very small and is alot smaller than any significance level, from this we can confirm that there is evidence to suggest that B1 is significantly different from 0 meaning that hypertensive crisis is statistically significant in predicting a 10 year risk of coronary heart disease.
+
+effect:
+for the hypertensive crisis level, having having Systolic blood pressure in this range is associated with an estimated multiplicative change of exp(1.155536) which corresponds to roughly a 80% increase from the normal level in the odds of having future coronary heart disease.
+1.155536
+
+my results do not agree with the findings of Wu et al. (2015), this is because I have found that the risk of coronary heart disease is higher with SBP from 120-129mm Hg sitting at 26% (in respect to the reference level) than the risk of coronary heart disease with SBP from 130 - 139mm Hg sitting at 20% (in respect to the reference level). this is a contradiction to the findings of Wu but I am not entirely sure why this is. 
+
+```{r}
+kable(exp(confint.default(logistic2, parm = "SBP_CAT")), digits = 3)%>%
+  kable_styling()
+```
+f)
+
+
+```{r}
+library(lmtest)
+pander(lrtest(logistic, logistic2))
+```
+
+given that the p-value for this likelihood ration test is smaller than any reasonable significance level with a value of 0.02498, we do have sufficient evidence to suggest that we would prefer the second model that uses SBP_CAT over the first model that does not.
+
+g)
+
+```{r}
+library(ResourceSelection)
+pander(hoslem.test(hd.complete$HD_RISK, logistic2$fitted.values, g = 10))
+
+pander(hoslem.test(hd.complete$HD_RISK, logistic2$fitted.values, g = 20))
+
+pander(hoslem.test(hd.complete$HD_RISK, logistic2$fitted.values, g = 30))
+```
+
+the Hosmer-Lemeshow tests for the second logistic regression model which included SBP_CAT show that as the amount of groups increases from 10 to 20 to 30 the p-value also increases which helps to show less and less evidence against the current model being tested meaning that these values appear to support the model being a reasonable fit for the observed data.
+
+this test does show that in reard to the number of groups it does apeear to be better to have less groups as opposed to more.
+
+Question 3:
+
+a)
+```{r}
+library(MASS)
+forward <- stepAIC(glm(HD_RISK ~ 1, data = hd.complete, family = "binomial"), scope = list(upper =  ~ SEX + AGE + factor(EDUC) + factor(SMOKER) + CIG + factor(BP_MED) + factor(STROKE) + factor(HYPER) + factor(DIAB) + CHOL + SBP + DBP + BMI + HR + GLUC, lower = ~1), direction = "forward", trace = FALSE)
+forward$anova
+```
+
+```{r}
+backward <- stepAIC(glm(HD_RISK ~ AGE + SBP + SEX + CIG + GLUC + CHOL + factor(HYPER) + 
+    factor(STROKE), data = hd.complete, family = "binomial"), scope = list(upper =  ~ SEX + AGE + factor(EDUC) + factor(SMOKER) + CIG + factor(BP_MED) + factor(STROKE) + factor(HYPER) + factor(DIAB) + CHOL + SBP + DBP + BMI + HR + GLUC, lower = ~1), direction = "backward", trace = FALSE)
+backward$anova
+```
+
+b)
+```{r}
+library(bestglm)
+
+predictors <- data.frame(SEX = hd.complete$SEX, AGE = hd.complete$AGE, EDUC = hd.complete$EDUC, SMOKER = hd.complete$SMOKER, CIG = hd.complete$CIG, BP_MED = hd.complete$BP_MED, STROKE = hd.complete$STROKE, HYPER = hd.complete$HYPER, DIAB = hd.complete$DIAB, CHOL = hd.complete$CHOL, SBP = hd.complete$SBP, DBP = hd.complete$DBP, BMI = hd.complete$BMI, HR = hd.complete$HR, GLUC = hd.complete$GLUC, y = hd.complete$HD_RISK)
+
+#best.AIC <- bestglm(Xy = predictors, family = binomial, IC = "AIC", method = "exhaustive")
+
+
+```
+
+
+c)
+
+my computer is unable to perform the required subset selection in part (b).
+
+
+

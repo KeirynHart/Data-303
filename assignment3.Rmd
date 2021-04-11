@@ -1,0 +1,228 @@
+---
+title: "Assignment 3"
+author: "Keiryn Hart, 300428418"
+date: "29/05/2020"
+output: pdf_document
+
+---
+Question 1:
+
+a)
+```{r}
+set.seed(123)
+x <- matrix(rnorm(1000 * 20), 1000, 20)
+X <- cbind(rep(1,1000),x)
+b <- c(2,3,3,3,3,3,3,3,3,3,0,0,0,0,0,0,0,0,0,0,0)
+e <- rnorm(1000)
+eps <- rnorm(1000)
+y <- X %*% b + e
+dat = data.frame(y,x)
+```
+
+b)
+```{r}
+nrow(dat)
+train <- sample(c(TRUE, FALSE), nrow(dat), rep=TRUE, prob = c(0.1 ,0.9))
+test <- (!train)
+```
+
+
+c)
+```{r}
+library(leaps)
+best_sub <- regsubsets(y~., data = dat[train,], nvmax = 20) 
+plot(summary(best_sub)$cp, main = "Best Subset Selection",xlab = "number of predictors", ylab = "CP" , type ="l")
+which.min(summary(best_sub)$cp)
+coef(best_sub, 11)
+
+```
+
+
+d)
+```{r}
+test_matrix <- model.matrix(y~., data = dat[test,])
+
+val.errors = rep(NA,19)
+for (i in 1:19){
+  coefi=coef(best_sub, id=i)
+  pred=test_matrix[,names(coefi)]%*%coefi
+  val.errors[i]=mean((dat$y[test]-pred)^2)
+}
+
+val.errors
+plot(val.errors, ,main="Test set approach to estimate test MSE", xlab="Number of Variables",ylab="test MSE",type='l')
+
+
+```
+e)
+```{r}
+best_i = which.min(val.errors)
+best_i
+coef(best_sub, best_i)
+
+best_subset <- regsubsets(y~., data = dat, nvmax = 20)
+coef(best_subset, best_i)
+
+```
+Question 2:
+
+a)
+```{r}
+k <- 10
+
+folds <- sample(1:k, nrow(dat), replace = T)
+table(folds)
+
+cv.errors <- matrix(NA, k, 20, dimnames = list(NULL, paste(1:20)))
+
+x <- model.matrix(y~., data =dat)
+```
+
+```{r}
+for(j in 1:k){
+  best <- regsubsets(y~., data = dat[folds!=j,], nvmax = 20)
+  for(i in 1:20){
+    coefi=coef(best, id = i)
+    pred=x[folds==j, names(coefi)]%*%coefi
+    cv.errors[j,i]=mean((dat$y[folds==j]-pred)^2)
+  }
+}
+cv.errors
+
+
+mean_cv_errors <- apply(cv.errors, 2, mean)
+mean_cv_errors
+
+
+#test mse
+```
+b)
+```{r}
+plot(mean_cv_errors, ,main="10-CV estimate of test MSE", xlab="Number of Variables",ylab="test MSE",type='l')
+best_mod <- which.min(mean_cv_errors)
+best_mod
+
+reg.best=regsubsets(y~., data=dat, nvmax=20)
+coef(reg.best, best_mod)
+```
+
+Question 3:
+
+a)
+```{r}
+library(ISLR)
+data(College)
+College <- na.omit(College)
+
+train1 <- sample(c(TRUE, FALSE), nrow(College), rep=TRUE)
+
+test1 <-(!train1)
+
+training <- College[train1,]
+testing <- College[-train1,]
+```
+
+b)
+
+```{r}
+
+#still need this..
+library(glmnet)
+x.train=x[train,]
+y.train=y[train] 
+
+x.test=x[test,] 
+y.test=y[test] 
+
+model1 <- lm(y.train ~ x.train)
+yfit <- model1$fitted.values
+
+```
+
+
+c)
+
+```{r}
+#x
+ridge.x <- model.matrix(Apps~., training)[,-1]
+testx <- model.matrix(Apps~., testing)[,-1]
+
+#y
+ridge.y <- training$Apps
+testy <- testing$Apps
+
+
+grid <- 10^seq(10,-2, length = 100)
+ridge <- glmnet(ridge.x, ridge.y, alpha = 0, lambda = grid)
+
+
+plot(ridge, xvar = "lambda", label = TRUE)
+
+
+```
+
+```{r}
+cv.out <- cv.glmnet(ridge.x, ridge.y, alpha = 0)
+cv.out
+plot(cv.out)
+
+
+bestlam <- cv.out$lambda.min
+bestlam
+log(bestlam)
+```
+
+```{r}
+
+ridge.best <- predict(cv.out, type = "coefficients", s = bestlam)
+mse.ridge <- predict(cv.out, s = 5.795785, newx=testx)
+meanmse <- mean((mse.ridge-testy)^2)
+meanmse
+```
+
+c)
+
+```{r}
+lasso <- glmnet(ridge.x, ridge.y, alpha =1)
+
+plot(lasso, xvar = "lambda", label = TRUE)
+
+
+```
+
+```{r}
+#least squared:
+predict(lasso, s=exp(0), type = "coefficients")
+
+cv.lasso <- cv.glmnet(ridge.x, ridge.y, alpha = 1)
+cv.lasso
+plot(cv.lasso)
+
+```
+
+```{r}
+lam1se <- cv.lasso$lambda.1se
+bestlambda <- predict(cv.lasso, type="coefficients", s = lam1se)
+
+log(lam1se)
+bestlambda
+```
+
+```{r}
+lasso.best <- predict(cv.lasso, type = "coefficients", s = lam1se)
+mse.lasso <- predict(cv.lasso, s = 5.539633, newx=testx)
+mean_lasso <- mean((mse.lasso-testy)^2)
+mean_lasso
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+
+

@@ -1,0 +1,248 @@
+---
+title: "Aissngment 1"
+author: "Keiryn Hart, 300428418"
+date: "20/03/2020"
+output: pdf_document
+---
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+
+```
+
+
+Q1:
+a)
+```{r}
+cancer <- read.csv("cancer_reg.csv", header = TRUE)
+str(cancer)
+nrow(cancer)
+
+```
+
+b)
+```{r}
+new_cancer <- cancer[,c(3,7,8,9,10,20,22,23)] 
+```
+
+c)
+```{r}
+a<-ggplot(new_cancer,aes(x=povertypercent, y=target_deathrate))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="percentage of poverty", y="target deathrate")+
+  theme_bw()
+
+b<-ggplot(new_cancer,aes(x=studypercap, y=target_deathrate))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="study per capita", y="target deathrate")+
+  theme_bw()
+
+c<-ggplot(new_cancer,aes(x=binnedinc, y=target_deathrate))+
+  geom_boxplot(aes(fill=binnedinc), show.legend=FALSE) +
+  labs(x="binnedinc", y="target deathrate)")+
+  theme_bw()
+
+d<-ggplot(new_cancer,aes(x=medianage, y=target_deathrate))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="medianage", y="target deathrate")+
+  theme_bw()
+
+e<-ggplot(new_cancer,aes(x=pctbachdeg25_over, y=target_deathrate))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="percentage of people aged over 25", y="target deathrate")+
+  theme_bw()
+
+f<-ggplot(new_cancer,aes(x=pctunemployed16_over, y=target_deathrate))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="percentage of people 16 years or older who are unemployed", y="target deathrate")+
+  theme_bw()
+
+g<-ggplot(new_cancer,aes(x=pctprivatecoverage, y=target_deathrate))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="percentage of people with private cover", y="target deathrate")+
+  theme_bw()
+
+grid.arrange(a,b,c,d,e,f,g)
+
+```
+there are 2 examples of non linear relationships which are (target death rate : median age) and (target death rate : private cover)
+
+D)
+```{r}
+cancerFilter <- new_cancer %>%
+  select(povertypercent, target_deathrate, studypercap, binnedinc, medianage, pctbachdeg25_over, pctunemployed16_over, pctprivatecoverage) %>%
+  filter(medianage < 200)
+nrow(cancerFilter)
+```
+
+E)
+```{r}
+str(cancerFilter)
+model1 <- lm(target_deathrate ~ povertypercent + studypercap + binnedinc + medianage + pctbachdeg25_over + pctunemployed16_over + pctprivatecoverage, data = cancerFilter)
+nullmodel <- lm(target_deathrate ~ 1, data = cancerFilter)
+summ.model1 <-summary(model1)
+```
+
+notable values:
+```{r}
+anovafit <- anova(nullmodel, model1)
+sum_model1 <- summary(model1)
+Fval <- anovafit$F[2]
+pval <- anovafit$`Pr(>F)`[2]
+RSE <- sum_model1$sigma
+Rsq <- sum_model1$r.squared
+adjRsq <- sum_model1$adj.r.squared
+statistic <- c("F-statistic", "p-value", "RSE", "R-squared", "Adj. R-squared")
+values <- c(Fval, pval, RSE, Rsq, adjRsq)
+results <- data.frame(statistic, values)
+results
+
+```
+
+
+```{r}
+library(knitr)
+library(kableExtra)
+summ <- kable(results, caption = "Model Summary", booktabs=T, digits = 3)
+kable_styling(summ)
+```
+
+looking at the F-statistic and p-value there is a very small p-value which indicates that at least one of the predictors is important in predicting the death rate.
+
+Looking at the RSE the deviation of predicted values from true values has a percentage error relative the the mean of 0.12%
+
+Looking at R squared with a value of 0.305 which means that the model explains 30.5% of variation in the death rate, meanwhile adjusted R squared is 0.301 which is very similar to r squared which indicates it is unlikely that we have redundant predictors. the model on represents 30.5% which is not very much.
+
+f)
+```{r}
+predictorvalues <- subset(cancerFilter[1:5,], select = -c(target_deathrate))
+confidenceInt <- predict(model1, newdata = predictorvalues, interval = "confidence")
+predictionInt <- kable(predict(model1, newdata = predictorvalues, interval = "prediction"),
+                       digits = 2, caption = "prediction Intervals", booktabs=T)
+predictionInt
+confidenceInt
+```
+prediction intervals are concerned with the value of specific datapoints whereas confidence intervales are concerned with the mean value of datapoint at that position, prediction intervals are therefore wider because they show the uncertainty that the interval has when prediction the specific value of that point.
+
+g)
+the regression coefficients responding to pctunemployed16_over has an estimate of 1.469 this means that an increase in the percentage of people who are unemployed over the age of 16 is assiciated with an increase in the mean target death rate when all other predictors are kept constant. (1.469 * 100,000 = 146,900) 
+
+the regression coefficients corresponding to binnedinc[22640, 34218.1] has an estimate of 4.281 which is the estimated difference between binnedinc[22640, 34218.1] and [34218.1, 37413.8] being the reference level for this model. (not sure why the reference level is the bracket above?). it essentially means that the target deathrate was higher than the reference level by an estimated (4.261 * 100,000 = 428,100) when all other predictors remained constant.
+```{r}
+regressionCoeff <- kable(round(coef(summ.model1), 3), caption = "Regression Coefficients", booktabs = T)
+regressionCoeff
+```
+
+h)
+```{r}
+model2 <- lm(target_deathrate ~ povertypercent + binnedinc + medianage + pctbachdeg25_over + pctunemployed16_over + pctprivatecoverage + pctunemployed16_over:binnedinc, data = cancerFilter)
+sum_model2 <- summary(model2)
+RSE1 <- sum_model1$sigma
+Rsq1 <- sum_model1$r.squared
+adjRsq1 <- sum_model1$adj.r.squared
+RSE2 <- sum_model2$sigma
+Rsq2 <- sum_model2$r.squared
+adjRsq2 <- sum_model2$adj.r.squared
+stats <- c("RSE", "R-squared", "Adj. R-squared")
+stats1 <- c(RSE1, Rsq1, adjRsq1)
+stats2 <- c(RSE2, Rsq2, adjRsq2)
+comparison <- data.frame(stats, stats1, stats2)
+comparison
+```
+
+
+```{r}
+library(interactions)
+```
+
+```{r}
+kable(round(coef(sum_model2),3),caption = "regression coefficients")
+```
+i)
+we get an f-statistic value of 3.8699 and a p-value of 0.00015, since the p value is so small there is strong evidence to suggest that the interaction term explains a significant amount of variation in the target deathrate in addition to all other predictors.
+```{r}
+likelihood <- anova(model1, model2)
+
+likelihood
+Fstval <- likelihood$F[2]
+pstval <- likelihood$`Pr(>F)`[2]
+anovaStatistics <- c("F-statistic", "p-value")
+anovaValues <- c(Fstval, pstval)
+signress <- data.frame(anovaStatistics, anovaValues)
+ress
+```
+
+j)
+the interaction term indicates that one of the predictors either pctunemployed16_over or binnedinc has an effect on the other where the effect of one variable on the response variable being target death rate at different values of the other predictor variable.
+```{r}
+
+```
+
+k)
+```{r}
+plot(model2)
+```
+
+comments about the individual plots go here.
+
+residuals vs fitted:
+the residuals vs fitted plot shows no evidence on non-linearity as the pattern in the residuals does not indicate non-linearity, the line that has been plotted to show the relationship between the residuals and fitted values is very hirizontal.
+
+Normal Q-Q plot:
+the normal Q-Q plot indicates that there is evidence of non-normality, the points do not lie on the straight line which is a clear indicator. *something that could be done is to transform the response variable, or permutation testing.
+
+Scale Location plot:
+looking at the scale location plot, there seems to be a relatively even scatter of points in the plot with no clear evidence of funneling. the line plotted through the graph also seems to be relatively horizontal, both these factors indicate that there is no clear evidence of non - constant variance.
+
+Residuals vs Leverage:
+there is no clear evidence of there being influencial observations, there is only one cooks distance line which also indicates that there are no influencial observations.
+
+l)
+```{r}
+library(car)
+```
+
+When looking at the VIF values none of the values are larger than 10 which suggests there is no evidence of severe multicolinearity therefore there is no need for further action.
+```{r}
+vif(model1)
+kable(vif(model2), digits=2, caption="VIF values")%>%
+  kable_styling()
+```
+
+m)
+based on the above analysis from the second model in part h I would say that the predictions made by this model would not be very reliable as the predictions made only account for rougly 30% of the variation in the target death rate, this is only slighly better than the previous model aswell. although there are no signs of clear multicolinearity, the residual plots all look relatively good but the model is just not accurate enough to make good predictions at this stage.
+
+Q2)
+
+a) Y = Bo + B1X1 + B2X2 + B3X3 + B4X1X2 + B5X1X3 + E
+
+b)
+
+the statement (iii) is correct because this model predicts that males will earn more money than females at fixed amounts when the GPA is higher but as the GPA drops lower females tend to earn more.
+
+c)
+```{r}
+Y <- 50 + (20 * 4) + (0.07 * 110) + (35 * 1) + (0.01 * 4 * 110) + (-10 * 4 * 1)
+Y
+
+```
+d)
+False, since the coefficient for GPA/IQ is very small this indicates that the interaction term explains a significant amount of variance in the starting salary of students straight out of college.
+```{r}
+
+```
+
+Q3)
+```{r}
+
+```
+

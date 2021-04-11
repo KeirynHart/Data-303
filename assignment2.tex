@@ -1,0 +1,684 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={assignment 2},
+            pdfauthor={Keiryn Hart, 300428418},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{assignment 2}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Keiryn Hart, 300428418}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{08/05/2020}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(gridExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'gridExtra' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(car)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'car' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: carData
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(knitr)}
+\KeywordTok{library}\NormalTok{(kableExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'kableExtra' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(mgcv)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: nlme
+\end{verbatim}
+
+\begin{verbatim}
+## This is mgcv 1.8-28. For overview type 'help("mgcv-package")'.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(plyr)}
+\KeywordTok{library}\NormalTok{(broom)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hybrid <-}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\StringTok{"hybrid_reg.csv"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(hybrid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    153 obs. of  9 variables:
+##  $ carid      : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ vehicle    : Factor w/ 109 levels "3008","A5 BSG",..: 84 103 85 59 31 59 59 10 59 30 ...
+##  $ year       : int  1997 2000 2000 2000 2001 2001 2002 2003 2003 2003 ...
+##  $ msrp       : num  24510 35355 26832 18936 25833 ...
+##  $ accelrate  : num  7.46 8.2 7.97 9.52 7.04 9.52 9.71 8.33 9.52 8.62 ...
+##  $ mpg        : num  41.3 54.1 45.2 53 47 ...
+##  $ mpgmpge    : num  41.3 54.1 45.2 53 47 ...
+##  $ carclass   : Factor w/ 7 levels "C","L","M","MV",..: 1 1 1 7 1 7 7 4 7 1 ...
+##  $ carclass_id: int  1 1 1 7 1 7 7 4 7 1 ...
+\end{verbatim}
+
+Question 1:
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hybrid}\OperatorTok{$}\NormalTok{yr_group <-}\StringTok{ }\KeywordTok{cut}\NormalTok{(hybrid}\OperatorTok{$}\NormalTok{year, }\KeywordTok{c}\NormalTok{(}\DecValTok{1996}\NormalTok{,}\DecValTok{2004}\NormalTok{,}\DecValTok{2008}\NormalTok{,}\DecValTok{2011}\NormalTok{,}\DecValTok{2013}\NormalTok{))}
+\NormalTok{hybrid}\OperatorTok{$}\NormalTok{yr_group <-}\StringTok{ }\KeywordTok{revalue}\NormalTok{(hybrid}\OperatorTok{$}\NormalTok{yr_group, }\KeywordTok{c}\NormalTok{(}\StringTok{"(1996,2004]"}\NormalTok{=}\StringTok{"1997-2004"}\NormalTok{,}\StringTok{"(2004,2008]"}\NormalTok{=}\StringTok{"2005-2008"}\NormalTok{, }\StringTok{"(2008,2011]"}\NormalTok{=}\StringTok{"2009-2011"}\NormalTok{, }\StringTok{"(2011,2013]"}\NormalTok{=}\StringTok{"2012-2013"}\NormalTok{))}
+\NormalTok{hybrid}\OperatorTok{$}\NormalTok{msrp}\FloatTok{.1000}\NormalTok{ <-}\StringTok{ }\NormalTok{(hybrid}\OperatorTok{$}\NormalTok{msrp}\OperatorTok{/}\DecValTok{1000}\NormalTok{)}
+\KeywordTok{str}\NormalTok{(hybrid)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    153 obs. of  11 variables:
+##  $ carid      : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ vehicle    : Factor w/ 109 levels "3008","A5 BSG",..: 84 103 85 59 31 59 59 10 59 30 ...
+##  $ year       : int  1997 2000 2000 2000 2001 2001 2002 2003 2003 2003 ...
+##  $ msrp       : num  24510 35355 26832 18936 25833 ...
+##  $ accelrate  : num  7.46 8.2 7.97 9.52 7.04 9.52 9.71 8.33 9.52 8.62 ...
+##  $ mpg        : num  41.3 54.1 45.2 53 47 ...
+##  $ mpgmpge    : num  41.3 54.1 45.2 53 47 ...
+##  $ carclass   : Factor w/ 7 levels "C","L","M","MV",..: 1 1 1 7 1 7 7 4 7 1 ...
+##  $ carclass_id: int  1 1 1 7 1 7 7 4 7 1 ...
+##  $ yr_group   : Factor w/ 4 levels "1997-2004","2005-2008",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ msrp.1000  : num  24.5 35.4 26.8 18.9 25.8 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{table}\NormalTok{(hybrid}\OperatorTok{$}\NormalTok{yr_group)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## 1997-2004 2005-2008 2009-2011 2012-2013 
+##        14        25        57        57
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a<-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{yr_group, }\DataTypeTok{y=}\NormalTok{msrp}\FloatTok{.1000}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill=}\NormalTok{yr_group), }\DataTypeTok{show.legend=}\OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"Years"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"price (US $1000)"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{b<-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{accelrate, }\DataTypeTok{y=}\NormalTok{msrp}\FloatTok{.1000}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{'loess'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"Rate of Acceleration (mps)"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"price (US $1000)"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{c<-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{mpg, }\DataTypeTok{y=}\NormalTok{msrp}\FloatTok{.1000}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{'loess'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"Economy (miles per gallon)"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"price (US $1000)"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{d<-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{mpgmpge, }\DataTypeTok{y=}\NormalTok{msrp}\FloatTok{.1000}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{'loess'}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"Economy (considering the all electric range)"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"price (US $1000)"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{e<-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{carclass, }\DataTypeTok{y=}\NormalTok{msrp}\FloatTok{.1000}\NormalTok{))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_boxplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill=}\NormalTok{carclass), }\DataTypeTok{show.legend=}\OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"Car Classes"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"price (US $1000)"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\KeywordTok{grid.arrange}\NormalTok{(a,b,c,d,e)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment2_files/figure-latex/unnamed-chunk-4-1.pdf}
+there are indicators of non-linear relationships between the numerical
+predictors and msrp.1000 most notably in Miles per gallon (mpg) and
+mpgmpge (miles per gallon when considering electric range aswell)
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pair1 <-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{accelrate, }\DataTypeTok{y=}\NormalTok{mpg))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{'loess'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"rate of acceleration"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"miles per gallon"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{pair2 <-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{accelrate, }\DataTypeTok{y=}\NormalTok{mpgmpge))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{'loess'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"rate of acceleration"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"mpgmpge"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\NormalTok{pair3 <-}\KeywordTok{ggplot}\NormalTok{(hybrid,}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{mpg, }\DataTypeTok{y=}\NormalTok{mpgmpge))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method=}\StringTok{'loess'}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{"mpg"}\NormalTok{, }\DataTypeTok{y=}\StringTok{"mpgmpge"}\NormalTok{)}\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+
+\KeywordTok{grid.arrange}\NormalTok{(pair1, pair2, pair3, }\DataTypeTok{nrow =} \DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment2_files/figure-latex/unnamed-chunk-5-1.pdf}
+there is evidence of multicolinearity between mpg and mpgmpge and it
+shows a linear relationship between the two predictors, possibly due to
+the fact that both predictors represent similar things and as a result
+one may not be able to increase without the other.
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi})}
+\setcounter{enumi}{3}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(msrp}\FloatTok{.1000} \OperatorTok{~}\StringTok{ }\NormalTok{yr_group }\OperatorTok{+}\StringTok{ }\NormalTok{accelrate }\OperatorTok{+}\StringTok{ }\NormalTok{mpg }\OperatorTok{+}\StringTok{ }\NormalTok{mpgmpge }\OperatorTok{+}\StringTok{ }\NormalTok{carclass, }\DataTypeTok{data =}\NormalTok{ hybrid)}
+\NormalTok{VIFMODEL <-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{(}\DecValTok{1}\FloatTok{-0.6417}\NormalTok{)}
+\NormalTok{VIFMODEL}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.790957
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{vif}\NormalTok{(fit1), }\DataTypeTok{digits =} \DecValTok{2}\NormalTok{, }\DataTypeTok{caption =} \StringTok{"VIF Values"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+
+\caption{\label{tab:unnamed-chunk-6}VIF Values}
+\centering
+\begin{tabular}{l|r|r|r}
+\hline
+  & GVIF & Df & GVIF\textasciicircum{}(1/(2*Df))\\
+\hline
+yr\_group & 1.71 & 3 & 1.09\\
+\hline
+accelrate & 1.91 & 1 & 1.38\\
+\hline
+mpg & 3.16 & 1 & 1.78\\
+\hline
+mpgmpge & 1.98 & 1 & 1.41\\
+\hline
+carclass & 3.76 & 6 & 1.12\\
+\hline
+\end{tabular}
+\end{table}
+
+looking at the VIF values for this model it is interesting to note that
+none of the values for GVIF\^{}(1/(2*Df)) exceed or even come close to
+10 and none of them exceed the VIF model value of 2.790957. these
+results are quite surprising given the fact that the previous pairwise
+scatter plots indicated cases of multicolinearity between some of the
+predictors.
+
+\begin{enumerate}
+\def\labelenumi{\Alph{enumi})}
+\setcounter{enumi}{4}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit.gam<-}\KeywordTok{gam}\NormalTok{(msrp}\FloatTok{.1000} \OperatorTok{~}\StringTok{ }\NormalTok{yr_group }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(accelrate) }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(mpg) }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(mpgmpge) }\OperatorTok{+}\StringTok{ }\NormalTok{carclass , }\DataTypeTok{data=}\NormalTok{hybrid, }\DataTypeTok{method=}\StringTok{"REML"}\NormalTok{)}
+
+\NormalTok{summ.gam <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(fit.gam)}
+\NormalTok{RSE <-}\StringTok{ }\NormalTok{summ.gam}\OperatorTok{$}\NormalTok{scale}
+\NormalTok{adjRsq <-}\StringTok{ }\NormalTok{summ.gam}\OperatorTok{$}\NormalTok{r.sq}
+\NormalTok{Rsq <-}\StringTok{ }\NormalTok{summ.gam}\OperatorTok{$}\NormalTok{dev.expl}
+\NormalTok{statistics <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"RSE"}\NormalTok{, }\StringTok{"AdjRsq"}\NormalTok{, }\StringTok{"Rsq"}\NormalTok{)}
+\NormalTok{values <-}\StringTok{ }\KeywordTok{c}\NormalTok{(RSE, adjRsq, Rsq)}
+\NormalTok{stats <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(statistics, values)}
+\KeywordTok{kable}\NormalTok{(stats, }\DataTypeTok{booktabs =}\NormalTok{ T, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{tabular}{lr}
+\toprule
+statistics & values\\
+\midrule
+RSE & 118.668\\
+AdjRsq & 0.741\\
+Rsq & 0.772\\
+\bottomrule
+\end{tabular}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{5}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{summ.gam <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(fit.gam)}
+\KeywordTok{kable}\NormalTok{(summ.gam}\OperatorTok{$}\NormalTok{s.table, }\DataTypeTok{booktabs=}\StringTok{"T"}\NormalTok{, }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+  & edf & Ref.df & F & p-value\\
+\midrule
+s(accelrate) & 2.209 & 2.803 & 24.474 & 0.000\\
+s(mpg) & 4.946 & 6.027 & 2.700 & 0.019\\
+s(mpgmpge) & 1.950 & 2.324 & 1.115 & 0.361\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(fit.gam, }\DataTypeTok{all.terms =} \OtherTok{TRUE}\NormalTok{,}\DataTypeTok{rug=}\OtherTok{TRUE}\NormalTok{,}\DataTypeTok{residuals=}\OtherTok{FALSE}\NormalTok{,}
+     \DataTypeTok{pch=}\DecValTok{19}\NormalTok{, }\DataTypeTok{cex=}\FloatTok{0.65}\NormalTok{, }\DataTypeTok{scheme =} \DecValTok{1}\NormalTok{, }\DataTypeTok{shade.col=}\StringTok{"lightblue"}\NormalTok{, }\DataTypeTok{page=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment2_files/figure-latex/unnamed-chunk-8-1.pdf}
+we can see that accelrate and mpg are non-linear and significant and
+mpgmpge is non-linear and non significant. accelrate has an efd value of
+2.209 which indicates it is a quadratic curve with an f-statisti of
+24.474 and an extremely low p-value which indicates it is significant.
+
+mpg has an edf value of 4.946 which indicates that its curve is quite
+wiggly, it has a f-statistic of 2.700 and a p-value of 0.019 which also
+indicates its significance.
+
+mpgmpge has an edf value of 1.950 which is the lowest of the numerical
+predictors, it has an fstatistic of 1.115 and a p-value of 0.361, given
+its large p-value we can be relatively confident in saying that it does
+not have a significant non-linear effect on msrp.1000.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{6}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\KeywordTok{gam.check}\NormalTok{(fit.gam, }\DataTypeTok{k.rep =} \DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{assignment2_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\begin{verbatim}
+## 
+## Method: REML   Optimizer: outer newton
+## full convergence after 5 iterations.
+## Gradient range [-6.260482e-08,6.430341e-08]
+## (score 559.64 & scale 118.6676).
+## Hessian positive definite, eigenvalue range [0.212487,70.0645].
+## Model rank =  37 / 37 
+## 
+## Basis dimension (k) checking results. Low p-value (k-index<1) may
+## indicate that k is too low, especially if edf is close to k'.
+## 
+##                k'  edf k-index p-value   
+## s(accelrate) 9.00 2.21    1.06   0.721   
+## s(mpg)       9.00 4.95    0.81   0.010 **
+## s(mpgmpge)   9.00 1.95    0.80   0.006 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+looking at the table of basis dimensions we can see that the maximum
+number of basis functions for this model is 9 throughout, for accelrate
+we can see that the k index isvery close to 1 and the p-value is quite
+large which indicates that we may have enough basis functions for this
+predictor.
+
+for the other 2 predictors mpg and mpgmpge we can see that these
+predictors have k-index values which are quite far away from one being
+0.81 and 0.80 repsectively, their p-values are also very low being 0.008
+and 0.006, this is an indication that there may not be enough basis
+functions for these two variables.
+
+Looking at the Q-Q plot for this model we can see that the residuals do
+not follow a straight line all the way through which indicates that
+there is non-normality.
+
+when looking at the residual vs linear predictor plot it is quite easy
+to see that this plot indicates non linearity within the model, this
+could be due to potential outliers.
+
+the histogram of residuals has a relatively symmetrical bell shape which
+is expected.
+
+the response against fitted values plot forms a relatively straight line
+with variatio obviously as it is not a perfect model.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{7}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{model2 <-}\KeywordTok{gam}\NormalTok{(msrp}\FloatTok{.1000} \OperatorTok{~}\StringTok{ }\NormalTok{yr_group }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(accelrate) }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(mpgmpge) }\OperatorTok{+}\StringTok{ }\NormalTok{carclass , }\DataTypeTok{data=}\NormalTok{hybrid, }\DataTypeTok{method=}\StringTok{"REML"}\NormalTok{)}
+
+\NormalTok{model3 <-}\KeywordTok{gam}\NormalTok{(msrp}\FloatTok{.1000} \OperatorTok{~}\StringTok{ }\NormalTok{yr_group }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(accelrate) }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(mpg) }\OperatorTok{+}\StringTok{ }\NormalTok{carclass , }\DataTypeTok{data=}\NormalTok{hybrid, }\DataTypeTok{method=}\StringTok{"REML"}\NormalTok{)}
+
+\NormalTok{model4<-}\KeywordTok{gam}\NormalTok{(msrp}\FloatTok{.1000} \OperatorTok{~}\StringTok{ }\NormalTok{yr_group }\OperatorTok{+}\StringTok{ }\KeywordTok{s}\NormalTok{(accelrate) }\OperatorTok{+}\StringTok{ }\NormalTok{carclass , }\DataTypeTok{data=}\NormalTok{hybrid, }\DataTypeTok{method=}\StringTok{"REML"}\NormalTok{)}
+
+\NormalTok{likelihood1 <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(fit.gam, model2, }\DataTypeTok{test =} \StringTok{'F'}\NormalTok{)}
+\NormalTok{likelihood2 <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(fit.gam, model3, }\DataTypeTok{test =} \StringTok{'F'}\NormalTok{)}
+\NormalTok{likelihood3 <-}\StringTok{ }\KeywordTok{anova}\NormalTok{(fit.gam, model4, }\DataTypeTok{test =} \StringTok{'F'}\NormalTok{)}
+
+\NormalTok{likelihood1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Deviance Table
+## 
+## Model 1: msrp.1000 ~ yr_group + s(accelrate) + s(mpg) + s(mpgmpge) + carclass
+## Model 2: msrp.1000 ~ yr_group + s(accelrate) + s(mpgmpge) + carclass
+##   Resid. Df Resid. Dev      Df Deviance      F Pr(>F)
+## 1     129.8      15889                               
+## 2     132.7      16503 -2.9043  -613.95 1.7814 0.1557
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{likelihood2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Deviance Table
+## 
+## Model 1: msrp.1000 ~ yr_group + s(accelrate) + s(mpg) + s(mpgmpge) + carclass
+## Model 2: msrp.1000 ~ yr_group + s(accelrate) + s(mpg) + carclass
+##   Resid. Df Resid. Dev     Df Deviance      F Pr(>F)
+## 1    129.80      15889                              
+## 2    131.84      16384 -2.046  -494.61 2.0371 0.1334
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{likelihood3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Deviance Table
+## 
+## Model 1: msrp.1000 ~ yr_group + s(accelrate) + s(mpg) + s(mpgmpge) + carclass
+## Model 2: msrp.1000 ~ yr_group + s(accelrate) + carclass
+##   Resid. Df Resid. Dev      Df Deviance      F    Pr(>F)    
+## 1     129.8      15889                                      
+## 2     137.8      24070 -8.0037  -8180.5 8.6131 2.245e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+when looking at the liklihood ratio test for models one and two the
+p-value is quite high which indicates that we cannot reject the null
+hypothesis and say that these models do not differ significantly, but
+when looking at the Residual deviance we can see that the value for
+model 1 is slightly less than the value for model 2 indicating that,
+model 1 (fit.gam) is the better fit out of the two.
+
+looking at the second liklihood ratio test for models 1 and 3 the
+p-value is also quite large which indicates we cannot reject the null
+hypothesis. when looking at the residual deviance we can see that again
+similar to the first test the value for model 1 is less than the value
+for model 3 by around 500 indicating again that model 1 is the better
+fit.
+
+looking at the third and final test between models 1 and 4 the p-value
+is very small which indicates that we can reject the null hypothesis and
+say that these two model differ significantly. The residual deviance
+value for model 4 is roughly 8000 more than that of model 1 which again
+indicates that model 1 is the beter fit.
+
+i)-------
+
+The results in part (h) indicates that when both mpg and mpge are
+included in the model, the model has a better fit and explains more
+variance. when just one or the other variable is included the difference
+between the fit of the models is worse than the original although this
+is not by much.this highlihgts the pitfall of multicolinearity.
+
+j)-------
+
+the results in part h and i are relatively surprising given the findings
+in part (d) purely because section (d) shows the original model that
+includes both the variables mpg and mpgmpge clearly has indications of
+multicolinearity between these two variable. But when the liklihood
+ratio tests are run it shows that model 1 is still the better model out
+of various others that do and do not include one or the other of these
+variables, this is strange.
+
+k)-------
+
+When considering the AIC values you would choose model 2 but it is hard
+to say because the differences between the AIc values in the first 3
+models is hardly indifferent with model 2 being slightly smaller. But
+when considering the BIC values model 2 becomes the obvious choice as it
+is smaller than all the other models and the difference in every case is
+larger than 2 meaning there is a positive difference favouring model 2.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{aic.model1 <-}\StringTok{ }\KeywordTok{AIC}\NormalTok{(fit.gam)}
+\NormalTok{aic.model2 <-}\StringTok{ }\KeywordTok{AIC}\NormalTok{(model2)}
+\NormalTok{aic.model3 <-}\StringTok{ }\KeywordTok{AIC}\NormalTok{(model3)}
+\NormalTok{aic.model4 <-}\StringTok{ }\KeywordTok{AIC}\NormalTok{(model4)}
+
+\NormalTok{bic.model1 <-}\StringTok{ }\KeywordTok{BIC}\NormalTok{(fit.gam)}
+\NormalTok{bic.model2 <-}\StringTok{ }\KeywordTok{BIC}\NormalTok{(model2)}
+\NormalTok{bic.model3 <-}\StringTok{ }\KeywordTok{BIC}\NormalTok{(model3)}
+\NormalTok{bic.model4 <-}\StringTok{ }\KeywordTok{BIC}\NormalTok{(model4)}
+
+
+\NormalTok{n <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"AIC"}\NormalTok{, }\StringTok{"BIC"}\NormalTok{)}
+\NormalTok{m1 <-}\StringTok{ }\KeywordTok{c}\NormalTok{(aic.model1, bic.model1)}
+\NormalTok{m2 <-}\StringTok{ }\KeywordTok{c}\NormalTok{(aic.model2, bic.model2)}
+\NormalTok{m3 <-}\StringTok{ }\KeywordTok{c}\NormalTok{(aic.model3, bic.model3)}
+\NormalTok{m4 <-}\StringTok{ }\KeywordTok{c}\NormalTok{(aic.model4, bic.model4)}
+
+\NormalTok{df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(n, m1, m2, m3, m4)}
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     n       m1       m2       m3       m4
+## 1 AIC 1188.873 1189.562 1190.066 1238.712
+## 2 BIC 1256.008 1248.953 1251.902 1285.080
+\end{verbatim}
+
+
+\end{document}

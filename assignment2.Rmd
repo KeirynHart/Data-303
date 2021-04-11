@@ -1,0 +1,232 @@
+---
+title: "assignment 2"
+author: "Keiryn Hart, 300428418"
+date: "08/05/2020"
+output: pdf_document
+---
+
+```{r}
+library(ggplot2)
+library(gridExtra)
+library(car)
+library(knitr)
+library(kableExtra)
+library(mgcv)
+library(plyr)
+library(broom)
+```
+
+
+```{r}
+hybrid <- read.csv("hybrid_reg.csv", header = TRUE)
+str(hybrid)
+```
+
+
+Question 1:
+
+a)
+
+```{r}
+hybrid$yr_group <- cut(hybrid$year, c(1996,2004,2008,2011,2013))
+hybrid$yr_group <- revalue(hybrid$yr_group, c("(1996,2004]"="1997-2004","(2004,2008]"="2005-2008", "(2008,2011]"="2009-2011", "(2011,2013]"="2012-2013"))
+hybrid$msrp.1000 <- (hybrid$msrp/1000)
+str(hybrid)
+table(hybrid$yr_group)
+```
+
+
+b)
+
+```{r}
+a<-ggplot(hybrid,aes(x=yr_group, y=msrp.1000))+
+  geom_boxplot(aes(fill=yr_group), show.legend=FALSE) +
+  labs(x="Years", y="price (US $1000)")+
+  theme_bw()
+
+b<-ggplot(hybrid,aes(x=accelrate, y=msrp.1000))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="Rate of Acceleration (mps)", y="price (US $1000)")+
+  theme_bw()
+
+c<-ggplot(hybrid,aes(x=mpg, y=msrp.1000))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="Economy (miles per gallon)", y="price (US $1000)")+
+  theme_bw()
+
+d<-ggplot(hybrid,aes(x=mpgmpge, y=msrp.1000))+
+  geom_point() +
+  geom_smooth(method='loess') +
+  labs(x="Economy (considering the all electric range)", y="price (US $1000)")+
+  theme_bw()
+
+e<-ggplot(hybrid,aes(x=carclass, y=msrp.1000))+
+  geom_boxplot(aes(fill=carclass), show.legend=FALSE) +
+  labs(x="Car Classes", y="price (US $1000)")+
+  theme_bw()
+
+grid.arrange(a,b,c,d,e)
+```
+there are indicators of non-linear relationships between the numerical predictors and msrp.1000 most notably in Miles per gallon (mpg) and mpgmpge (miles per gallon when considering electric range aswell)
+
+
+c)
+
+```{r}
+pair1 <-ggplot(hybrid,aes(x=accelrate, y=mpg))+
+  geom_point() +
+  geom_smooth(method='loess')+
+  labs(x="rate of acceleration", y="miles per gallon")+
+  theme_bw()
+
+pair2 <-ggplot(hybrid,aes(x=accelrate, y=mpgmpge))+
+  geom_point() +
+  geom_smooth(method='loess')+
+  labs(x="rate of acceleration", y="mpgmpge")+
+  theme_bw()
+
+pair3 <-ggplot(hybrid,aes(x=mpg, y=mpgmpge))+
+  geom_point() +
+  geom_smooth(method='loess')+
+  labs(x="mpg", y="mpgmpge")+
+  theme_bw()
+
+grid.arrange(pair1, pair2, pair3, nrow = 2)
+
+```
+there is evidence of multicolinearity between mpg and mpgmpge and it shows a linear relationship between the two predictors, possibly due to the fact that both predictors represent similar things and as a result one may not be able to increase without the other.
+
+D)
+
+```{r}
+fit1 <- lm(msrp.1000 ~ yr_group + accelrate + mpg + mpgmpge + carclass, data = hybrid)
+VIFMODEL <- 1/(1-0.6417)
+VIFMODEL
+kable(vif(fit1), digits = 2, caption = "VIF Values")%>%
+  kable_styling()
+```
+looking at the VIF values for this model it is interesting to note that none of the values for GVIF^(1/(2*Df)) exceed or even come close to 10 and none of them exceed the VIF model value of 2.790957. these results are quite surprising given the fact that the previous pairwise scatter plots indicated cases of multicolinearity between some of the predictors.
+
+E)
+
+```{r}
+fit.gam<-gam(msrp.1000 ~ yr_group + s(accelrate) + s(mpg) + s(mpgmpge) + carclass , data=hybrid, method="REML")
+
+summ.gam <- summary(fit.gam)
+RSE <- summ.gam$scale
+adjRsq <- summ.gam$r.sq
+Rsq <- summ.gam$dev.expl
+statistics <- c("RSE", "AdjRsq", "Rsq")
+values <- c(RSE, adjRsq, Rsq)
+stats <- data.frame(statistics, values)
+kable(stats, booktabs = T, digits = 3)
+
+```
+ 
+f)
+
+```{r}
+summ.gam <- summary(fit.gam)
+kable(summ.gam$s.table, booktabs="T", digits = 3)%>%
+  kable_styling()
+plot(fit.gam, all.terms = TRUE,rug=TRUE,residuals=FALSE,
+     pch=19, cex=0.65, scheme = 1, shade.col="lightblue", page=1)
+```
+we can see that accelrate and mpg are non-linear and significant and mpgmpge is non-linear and non significant.
+accelrate has an efd value of 2.209 which indicates it is a quadratic curve with an f-statisti of 24.474 and  an extremely low p-value which indicates it is significant.
+
+mpg has an edf value of 4.946 which indicates that its curve is quite wiggly, it has a f-statistic of 2.700 and a p-value of 0.019 which also indicates its significance.
+
+mpgmpge has an edf value of 1.950 which is the lowest of the numerical predictors, it has an fstatistic of 1.115 and a p-value of 0.361, given its large p-value we can be relatively confident in saying that it does not have a significant non-linear effect on msrp.1000.
+
+g)
+
+```{r}
+par(mfrow=c(2,2))
+gam.check(fit.gam, k.rep = 1000)
+```
+looking at the table of basis dimensions we can see that the maximum number of basis functions for this model is 9 throughout, for accelrate we can see that the k index isvery close to 1 and the p-value is quite large which indicates that we may have enough basis functions for this predictor.
+
+for the other 2 predictors mpg and mpgmpge we can see that these predictors have k-index values which are quite far away from one being 0.81 and 0.80 repsectively, their p-values are also very low being 0.008 and 0.006, this is an indication that there may not be enough basis functions for these two variables.
+
+Looking at the Q-Q plot for this model we can see that the residuals do not follow a straight line all the way through which indicates that there is non-normality.
+
+when looking at the residual vs linear predictor plot it is quite easy to see that this plot indicates non linearity within the model, this could be due to potential outliers.
+
+the histogram of residuals has a relatively symmetrical bell shape which is expected.
+
+the response against fitted values plot forms a relatively straight line with variatio obviously as it is not a perfect model.
+
+h)
+
+```{r}
+model2 <-gam(msrp.1000 ~ yr_group + s(accelrate) + s(mpgmpge) + carclass , data=hybrid, method="REML")
+
+model3 <-gam(msrp.1000 ~ yr_group + s(accelrate) + s(mpg) + carclass , data=hybrid, method="REML")
+
+model4<-gam(msrp.1000 ~ yr_group + s(accelrate) + carclass , data=hybrid, method="REML")
+
+likelihood1 <- anova(fit.gam, model2, test = 'F')
+likelihood2 <- anova(fit.gam, model3, test = 'F')
+likelihood3 <- anova(fit.gam, model4, test = 'F')
+
+likelihood1
+likelihood2
+likelihood3
+```
+
+when looking at the liklihood ratio test for models one and two the p-value is quite high which indicates that we cannot reject the null hypothesis and say that these models do not differ significantly, but when looking at the Residual deviance we can see that the value for model 1 is slightly less than the value for model 2 indicating that, model 1 (fit.gam) is the better fit out of the two.
+
+looking at the second liklihood ratio test for models 1 and 3 the p-value is also quite large which indicates we cannot reject the null hypothesis. when looking at the residual deviance we can see that again similar to the first test the value for model 1 is less than the value for model 3 by around 500 indicating again that model 1 is the better fit.
+
+looking at the third and final test between models 1 and 4 the p-value is very small which indicates that we can reject the null hypothesis and say that these two model differ significantly. The residual deviance value for model 4 is roughly 8000 more than that of model 1 which again indicates that model 1 is the beter fit.
+
+i)-------
+
+The results in part (h) indicates that when both mpg and mpge are included in the model, the model has a better fit and explains more variance. when just one or the other variable is included the difference between the fit of the models is worse than the original although this is not by much.this highlihgts the pitfall of multicolinearity.
+```{r}
+
+```
+
+j)-------
+
+the results in part h and i are relatively surprising given the findings in part (d) purely because section (d) shows the original model that includes both the variables mpg and mpgmpge clearly has indications of multicolinearity between these two variable. But when the liklihood ratio tests are run it shows that model 1 is still the better model out of various others that do and do not include one or the other of these variables, this is strange.
+```{r}
+
+```
+
+k)-------
+
+When considering the AIC values you would choose model 2 but it is hard to say because the differences between the AIc values in the first 3 models is hardly indifferent with model 2 being slightly smaller.
+But when considering the BIC values model 2 becomes the obvious choice as it is smaller than all the other models and the difference in every case is larger than 2 meaning there is a positive difference favouring model 2.
+```{r}
+aic.model1 <- AIC(fit.gam)
+aic.model2 <- AIC(model2)
+aic.model3 <- AIC(model3)
+aic.model4 <- AIC(model4)
+
+bic.model1 <- BIC(fit.gam)
+bic.model2 <- BIC(model2)
+bic.model3 <- BIC(model3)
+bic.model4 <- BIC(model4)
+
+
+n <- c("AIC", "BIC")
+m1 <- c(aic.model1, bic.model1)
+m2 <- c(aic.model2, bic.model2)
+m3 <- c(aic.model3, bic.model3)
+m4 <- c(aic.model4, bic.model4)
+
+df <- data.frame(n, m1, m2, m3, m4)
+df
+```
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 

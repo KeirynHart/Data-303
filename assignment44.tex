@@ -1,0 +1,1212 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={assignment4},
+            pdfauthor={Keiryn Hart, 300428418},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{assignment4}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Keiryn Hart, 300428418}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{29/06/2020}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load the "readxl" package to read in data from an Excel file.}
+\KeywordTok{library}\NormalTok{(readxl)}
+
+\CommentTok{# Read in the heart disease dataset.}
+\NormalTok{hd <-}\StringTok{ }\KeywordTok{read_xlsx}\NormalTok{(}\StringTok{"C:/Users/Keiryn Hart/Documents/Uni/Data 303/Heart Disease.xlsx"}\NormalTok{, }\DataTypeTok{sheet =} \StringTok{"Data"}\NormalTok{, }\DataTypeTok{na =} \StringTok{"NA"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Question 1: a)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ncol}\NormalTok{(hd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{k <-}\StringTok{ }\DecValTok{16}
+\NormalTok{i <-}\StringTok{ }\DecValTok{1}
+\NormalTok{fr.prop <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"Frequency (n)"}\NormalTok{, }\StringTok{"Proportion (p)"}\NormalTok{))}
+\KeywordTok{colnames}\NormalTok{(fr.prop) <-}\StringTok{ "Variable"}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{k)\{}
+\NormalTok{  count <-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{is.na}\NormalTok{(hd[,i]))}
+\NormalTok{  prop <-}\StringTok{ }\NormalTok{count}\OperatorTok{/}\KeywordTok{nrow}\NormalTok{(hd)}
+\NormalTok{  results <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{c}\NormalTok{(count, prop))}
+\NormalTok{  fr.prop <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(fr.prop, results)}
+  \KeywordTok{colnames}\NormalTok{(fr.prop)[i}\OperatorTok{+}\DecValTok{1}\NormalTok{] <-}\StringTok{ }\KeywordTok{paste}\NormalTok{(}\StringTok{"VARIABLE"}\NormalTok{, i, }\DataTypeTok{sep=} \StringTok{"_"}\NormalTok{)}
+\NormalTok{\}}
+
+\NormalTok{fr.prop}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Variable VARIABLE_1 VARIABLE_2   VARIABLE_3 VARIABLE_4
+## 1  Frequency (n)          0          0 105.00000000          0
+## 2 Proportion (p)          0          0   0.02476415          0
+##     VARIABLE_5 VARIABLE_6 VARIABLE_7 VARIABLE_8 VARIABLE_9 VARIABLE_10
+## 1 29.000000000    53.0000          0          0          0 50.00000000
+## 2  0.006839623     0.0125          0          0          0  0.01179245
+##   VARIABLE_11 VARIABLE_12  VARIABLE_13  VARIABLE_14  VARIABLE_15
+## 1           0           0 19.000000000 1.0000000000 388.00000000
+## 2           0           0  0.004481132 0.0002358491   0.09150943
+##   VARIABLE_16
+## 1           0
+## 2           0
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hd.complete <-}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(hd)}
+\NormalTok{missing <-}\StringTok{ }\KeywordTok{nrow}\NormalTok{(hd) }\OperatorTok{-}\StringTok{ }\KeywordTok{nrow}\NormalTok{(hd.complete)}
+\NormalTok{missing}\OperatorTok{/}\KeywordTok{nrow}\NormalTok{(hd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1372642
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hd.complete[, }\StringTok{"SBP_CAT"}\NormalTok{] <-}\StringTok{ }\OtherTok{NA}
+\NormalTok{a <-}\StringTok{ }\KeywordTok{nrow}\NormalTok{(hd.complete)}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{a)\{}
+  \ControlFlowTok{if}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{SBP[i] }\OperatorTok{<}\StringTok{ }\DecValTok{120}\NormalTok{)\{}
+\NormalTok{    hd.complete}\OperatorTok{$}\NormalTok{SBP_CAT[i] <-}\StringTok{ "normal"}
+\NormalTok{  \}}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{SBP[i] }\OperatorTok{>}\StringTok{ }\DecValTok{119} \OperatorTok{&}\StringTok{ }\NormalTok{hd.complete}\OperatorTok{$}\NormalTok{SBP[i] }\OperatorTok{<}\StringTok{ }\DecValTok{130}\NormalTok{)\{}
+\NormalTok{    hd.complete}\OperatorTok{$}\NormalTok{SBP_CAT[i] <-}\StringTok{ "elevated"}
+\NormalTok{  \}}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{SBP[i] }\OperatorTok{>}\StringTok{ }\DecValTok{129} \OperatorTok{&}\StringTok{ }\NormalTok{hd.complete}\OperatorTok{$}\NormalTok{SBP[i] }\OperatorTok{<}\StringTok{ }\DecValTok{140}\NormalTok{)\{}
+\NormalTok{    hd.complete}\OperatorTok{$}\NormalTok{SBP_CAT[i] <-}\StringTok{ "High Stage 1"}
+\NormalTok{  \}}
+  \ControlFlowTok{else} \ControlFlowTok{if}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{SBP[i] }\OperatorTok{>}\StringTok{ }\DecValTok{139} \OperatorTok{&}\StringTok{ }\NormalTok{hd.complete}\OperatorTok{$}\NormalTok{SBP[i] }\OperatorTok{<}\StringTok{ }\DecValTok{180}\NormalTok{)\{}
+\NormalTok{    hd.complete}\OperatorTok{$}\NormalTok{SBP_CAT[i] <-}\StringTok{ "High Stage 2"}
+\NormalTok{  \}}
+  \ControlFlowTok{else}\NormalTok{\{}
+\NormalTok{    hd.complete}\OperatorTok{$}\NormalTok{SBP_CAT[i] <-}\StringTok{ "hypertensive crisis"}
+\NormalTok{  \}}
+\NormalTok{\}}
+
+\NormalTok{hd.complete}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3,658 x 17
+##      SEX   AGE  EDUC SMOKER   CIG BP_MED STROKE HYPER  DIAB  CHOL   SBP
+##    <dbl> <dbl> <dbl>  <dbl> <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
+##  1     1    39     4      0     0      0      0     0     0   195  106 
+##  2     0    46     2      0     0      0      0     0     0   250  121 
+##  3     1    48     1      1    20      0      0     0     0   245  128.
+##  4     0    61     3      1    30      0      0     1     0   225  150 
+##  5     0    46     3      1    23      0      0     0     0   285  130 
+##  6     0    43     2      0     0      0      0     1     0   228  180 
+##  7     0    63     1      0     0      0      0     0     0   205  138 
+##  8     0    45     2      1    20      0      0     0     0   313  100 
+##  9     1    52     1      0     0      0      0     1     0   260  142.
+## 10     1    43     1      1    30      0      0     1     0   225  162 
+## # ... with 3,648 more rows, and 6 more variables: DBP <dbl>, BMI <dbl>,
+## #   HR <dbl>, GLUC <dbl>, HD_RISK <dbl>, SBP_CAT <chr>
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  because it can provide meaninful qualitative differences where the cut
+  off points for the different levels of the predictor can reflect
+  better levels for the model predictions.
+\end{enumerate}
+
+Question 2:
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{logistic <-}\StringTok{  }\KeywordTok{glm}\NormalTok{(HD_RISK }\OperatorTok{~}\StringTok{ }\NormalTok{SBP }\OperatorTok{+}\StringTok{ }\NormalTok{DBP }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(SEX) }\OperatorTok{+}\StringTok{ }\NormalTok{AGE }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(EDUC) }\OperatorTok{+}\StringTok{ }\NormalTok{CIG }\OperatorTok{+}\StringTok{ }\NormalTok{CHOL }\OperatorTok{+}\StringTok{ }\NormalTok{BMI }\OperatorTok{+}\StringTok{ }\NormalTok{GLUC, }\DataTypeTok{family =}\NormalTok{ binomial, }\DataTypeTok{data =}\NormalTok{ hd.complete)}
+\KeywordTok{summary}\NormalTok{(logistic)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = HD_RISK ~ SBP + DBP + factor(SEX) + AGE + factor(EDUC) + 
+##     CIG + CHOL + BMI + GLUC, family = binomial, data = hd.complete)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.9444  -0.5969  -0.4262  -0.2843   2.9063  
+## 
+## Coefficients:
+##                Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)   -8.962559   0.579182 -15.475  < 2e-16 ***
+## SBP            0.018249   0.003484   5.238 1.63e-07 ***
+## DBP           -0.002798   0.006385  -0.438   0.6612    
+## factor(SEX)1   0.544414   0.108953   4.997 5.83e-07 ***
+## AGE            0.063433   0.006695   9.474  < 2e-16 ***
+## factor(EDUC)2 -0.188485   0.123171  -1.530   0.1259    
+## factor(EDUC)3 -0.196924   0.149848  -1.314   0.1888    
+## factor(EDUC)4 -0.052129   0.164125  -0.318   0.7508    
+## CIG            0.019463   0.004191   4.644 3.42e-06 ***
+## CHOL           0.002371   0.001127   2.105   0.0353 *  
+## BMI            0.006714   0.012639   0.531   0.5952    
+## GLUC           0.007186   0.001674   4.293 1.77e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 3121.2  on 3657  degrees of freedom
+## Residual deviance: 2758.8  on 3646  degrees of freedom
+## AIC: 2782.8
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(car)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'car' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: carData
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(kableExtra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'kableExtra' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{vif}\NormalTok{(logistic), }\DataTypeTok{digits =} \DecValTok{2}\NormalTok{, }\DataTypeTok{caption =} \StringTok{"VIF Values"}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[t]
+
+\caption{\label{tab:unnamed-chunk-7}VIF Values}
+\centering
+\begin{tabular}{l|r|r|r}
+\hline
+  & GVIF & Df & GVIF\textasciicircum{}(1/(2*Df))\\
+\hline
+SBP & 3.02 & 1 & 1.74\\
+\hline
+DBP & 2.78 & 1 & 1.67\\
+\hline
+factor(SEX) & 1.24 & 1 & 1.11\\
+\hline
+AGE & 1.29 & 1 & 1.13\\
+\hline
+factor(EDUC) & 1.10 & 3 & 1.02\\
+\hline
+CIG & 1.24 & 1 & 1.11\\
+\hline
+CHOL & 1.06 & 1 & 1.03\\
+\hline
+BMI & 1.18 & 1 & 1.09\\
+\hline
+GLUC & 1.02 & 1 & 1.01\\
+\hline
+\end{tabular}
+\end{table}
+
+none of the vif values exceed 1.74 and all are clearly far below 10
+which indicates that there is little evidence relationg to
+mulitcoliniarity of the predictors and therefore there is no need to
+remove any of the predictors.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+\end{enumerate}
+
+regression equation:
+
+\#log(p\textsuperscript{/1-p}) = HD\_RISK + 0.0183\emph{SBP -
+0.00280}DBP + 0.544\emph{factor(SEX)1 + 0.0634}AGE -
+0.189\emph{factor(SEX)2 - 0.197}factor(SEX)3 - 0.0521\emph{factor(SEX)4
++ 0.195}CIG + 0.00237\emph{CHOL + 0.00671}BMI + 0.00719*GLUC
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(pander)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'pander' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pander}\NormalTok{(}\KeywordTok{summary}\NormalTok{(logistic))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\toprule
+\begin{minipage}[b]{0.24\columnwidth}\centering
+~\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
+Estimate\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
+Std. Error\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\centering
+z value\strut
+\end{minipage} & \begin{minipage}[b]{0.14\columnwidth}\centering
+Pr(\textgreater{}\textbar{}z\textbar{})\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{(Intercept)}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+-8.963\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.5792\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+-15.47\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+5.157e-54\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{SBP}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.01825\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.003484\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+5.238\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+1.626e-07\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{DBP}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+-0.002798\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.006385\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+-0.4382\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.6612\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{factor(SEX)1}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.5444\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.109\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+4.997\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+5.83e-07\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{AGE}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.06343\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.006695\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+9.474\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+2.685e-21\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{factor(EDUC)2}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+-0.1885\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.1232\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+-1.53\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.1259\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{factor(EDUC)3}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+-0.1969\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.1498\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+-1.314\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.1888\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{factor(EDUC)4}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+-0.05213\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.1641\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+-0.3176\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.7508\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{CIG}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.01946\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.004191\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+4.644\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+3.424e-06\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{CHOL}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.002371\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.001127\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+2.105\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.0353\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{BMI}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.006714\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.01264\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+0.5313\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.5952\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.24\columnwidth}\centering
+\textbf{GLUC}\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+0.007186\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.001674\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\centering
+4.293\strut
+\end{minipage} & \begin{minipage}[t]{0.14\columnwidth}\centering
+1.766e-05\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+(Dispersion parameter for binomial family taken to be 1 )
+
+\begin{longtable}[]{@{}cc@{}}
+\toprule
+\endhead
+\begin{minipage}[t]{0.27\columnwidth}\centering
+Null deviance:\strut
+\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
+3121 on 3657 degrees of freedom\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.27\columnwidth}\centering
+Residual deviance:\strut
+\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
+2759 on 3646 degrees of freedom\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\item
+\end{enumerate}
+
+Walds tests: SBP:
+
+Hypothesis: H0:β1 = 0 H1:β1 ≠ 0
+
+test statistic: 5.238
+
+p-value: 1.63e-07
+
+given the fact that the p-value for SBP is significantly smaller than
+any significance level in consideration we have enough evidence to
+suggest that B1 is significantly different from 0 and therefore SBP is
+statistically significant as a predictor of a 10 year risk of Coronary
+Heart disease.
+
+DBP:
+
+Hypothesis: H0:β2 = 0 H1:β2 ≠ 0
+
+Test statistic: -0.438
+
+p-value: 0.6612
+
+Considering that the p-value for DBP is quite large and it exceeds any
+significance level, a conclusion can be formed that B2 is not
+significantly different from 0 which means that the effect of DBP does
+not appear to be a statistically significant for 10 year risk of
+coronary heart disease.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  an increase of 1mm Hg in SBP is associated with an estimated
+  multiplicative change of exp(0.018249) as shown below. The resulting
+  figure corresponds to a roughly 2\% increase in the odds of having a
+  10 year risk of future coronary heart disease.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{exp}\NormalTok{(}\FloatTok{0.018249}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.018417
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{exp}\NormalTok{(}\KeywordTok{confint.default}\NormalTok{(logistic, }\DataTypeTok{parm =} \StringTok{"SBP"}\NormalTok{)), }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l|r|r}
+\hline
+  & 2.5 \% & 97.5 \%\\
+\hline
+SBP & 1.011 & 1.025\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{4}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hd.complete}\OperatorTok{$}\NormalTok{SBP_CAT <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{SBP_CAT, }\DataTypeTok{levels =} \KeywordTok{c}\NormalTok{(}\StringTok{"normal"}\NormalTok{, }\StringTok{"elevated"}\NormalTok{, }\StringTok{"High Stage 1"}\NormalTok{, }\StringTok{"High Stage 2"}\NormalTok{, }\StringTok{"hypertensive crisis"}\NormalTok{))}
+\NormalTok{logistic2 <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(HD_RISK }\OperatorTok{~}\StringTok{ }\KeywordTok{factor}\NormalTok{(SBP_CAT) }\OperatorTok{+}\StringTok{ }\NormalTok{DBP }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(SEX) }\OperatorTok{+}\StringTok{ }\NormalTok{AGE }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(EDUC) }\OperatorTok{+}\StringTok{ }\NormalTok{CIG }\OperatorTok{+}\StringTok{ }\NormalTok{CHOL }\OperatorTok{+}\StringTok{ }\NormalTok{BMI }\OperatorTok{+}\StringTok{ }\NormalTok{GLUC, }\DataTypeTok{family =}\NormalTok{ binomial, }\DataTypeTok{data =}\NormalTok{ hd.complete)}
+\KeywordTok{summary}\NormalTok{(logistic2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = HD_RISK ~ factor(SBP_CAT) + DBP + factor(SEX) + 
+##     AGE + factor(EDUC) + CIG + CHOL + BMI + GLUC, family = binomial, 
+##     data = hd.complete)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.7466  -0.6025  -0.4283  -0.2843   2.8458  
+## 
+## Coefficients:
+##                                     Estimate Std. Error z value Pr(>|z|)
+## (Intercept)                        -7.790357   0.696157 -11.191  < 2e-16
+## factor(SBP_CAT)elevated             0.234938   0.161846   1.452 0.146609
+## factor(SBP_CAT)High Stage 1         0.189517   0.177903   1.065 0.286746
+## factor(SBP_CAT)High Stage 2         0.592431   0.184339   3.214 0.001310
+## factor(SBP_CAT)hypertensive crisis  1.155536   0.298192   3.875 0.000107
+## DBP                                 0.006231   0.005864   1.063 0.287955
+## factor(SEX)1                        0.517430   0.108387   4.774 1.81e-06
+## AGE                                 0.067004   0.006634  10.100  < 2e-16
+## factor(EDUC)2                      -0.190932   0.122913  -1.553 0.120329
+## factor(EDUC)3                      -0.215698   0.149497  -1.443 0.149068
+## factor(EDUC)4                      -0.061899   0.164188  -0.377 0.706173
+## CIG                                 0.019659   0.004184   4.699 2.62e-06
+## CHOL                                0.002539   0.001126   2.256 0.024097
+## BMI                                 0.006294   0.012617   0.499 0.617921
+## GLUC                                0.007432   0.001667   4.457 8.29e-06
+##                                       
+## (Intercept)                        ***
+## factor(SBP_CAT)elevated               
+## factor(SBP_CAT)High Stage 1           
+## factor(SBP_CAT)High Stage 2        ** 
+## factor(SBP_CAT)hypertensive crisis ***
+## DBP                                   
+## factor(SEX)1                       ***
+## AGE                                ***
+## factor(EDUC)2                         
+## factor(EDUC)3                         
+## factor(EDUC)4                         
+## CIG                                ***
+## CHOL                               *  
+## BMI                                   
+## GLUC                               ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 3121.2  on 3657  degrees of freedom
+## Residual deviance: 2768.2  on 3643  degrees of freedom
+## AIC: 2798.2
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\roman{enumi})}
+\setcounter{enumi}{1}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{elevated <-}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{0.234938}\NormalTok{)}
+\NormalTok{High1 <-}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{0.189517}\NormalTok{)}
+\NormalTok{High2 <-}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{0.592431}\NormalTok{)}
+\NormalTok{hypertensive <-}\StringTok{ }\KeywordTok{exp}\NormalTok{(}\FloatTok{1.155536}\NormalTok{)}
+
+\NormalTok{elevated }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.26483
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{High1 }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.208666
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{High2 }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1.808379
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hypertensive}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.175725
+\end{verbatim}
+
+SBP\_CAT:
+
+elevated:
+
+the p-value for the elevated level is 0.146609, this is quite large and
+it exceeds any significance level which means we have evidence to
+suggest that B1 is not significantly different from 0 which indicates
+that an elevated SBP level is not statistically significant in
+predicting a 10 year risk of coronary heart disease.
+
+effect:
+
+for the elevated level of SBP\_CAT, having Systolic blood pressure in
+this range is associated with an estimated multiplicative change of
+exp(0.234938) which corresponds to roughly a 26\% increase from a normal
+level in the odds of having future coronary heart disease.
+
+High stage 1:
+
+the p-value for high stage 1 is 0.286746, this is also a large p-value
+and is even larger than that of the elevated category. similarly to
+elevated it exceeds all significance levels and therefore B1 is not
+significantly different from 0 and in turn is not statistically
+significant in predicting a 10 year risk of coronary heart disease.
+
+effect:
+
+for the High stage 1 level, having having Systolic blood pressure in
+this range is associated with an estimated multiplicative change of
+exp(0.189517) which corresponds to roughly a 20\% increase from the
+normal level in the odds of having future coronary heart disease.
+
+High stage 2:
+
+the p-value for high stage 2 is 0.001310, this p-value is very small and
+is alot smaller than any significance level, from this we can confirm
+that there is evidence to suggest that B1 is significantly different
+from 0 meaning that high stage 2 of SBP\_CAT is statistically
+significant in predicting a 10 year risk of coronary heart disease.
+
+effect:
+
+for the High stage 2 level, having having Systolic blood pressure in
+this range is associated with an estimated multiplicative change of
+exp(0.592431) which corresponds to roughly a 217\% increase from the
+normal level in the odds of having future coronary heart disease.
+
+hypertensive crisis:
+
+the p-value for hypertensive crisis is 0.000107, again this p-value is
+very small and is alot smaller than any significance level, from this we
+can confirm that there is evidence to suggest that B1 is significantly
+different from 0 meaning that hypertensive crisis is statistically
+significant in predicting a 10 year risk of coronary heart disease.
+
+effect: for the hypertensive crisis level, having having Systolic blood
+pressure in this range is associated with an estimated multiplicative
+change of exp(1.155536) which corresponds to roughly a 80\% increase
+from the normal level in the odds of having future coronary heart
+disease. 1.155536
+
+my results do not agree with the findings of Wu et al.~(2015), this is
+because I have found that the risk of coronary heart disease is higher
+with SBP from 120-129mm Hg sitting at 26\% (in respect to the reference
+level) than the risk of coronary heart disease with SBP from 130 - 139mm
+Hg sitting at 20\% (in respect to the reference level). this is a
+contradiction to the findings of Wu but I am not entirely sure why this
+is.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{kable}\NormalTok{(}\KeywordTok{exp}\NormalTok{(}\KeywordTok{confint.default}\NormalTok{(logistic2, }\DataTypeTok{parm =} \StringTok{"SBP_CAT"}\NormalTok{)), }\DataTypeTok{digits =} \DecValTok{3}\NormalTok{)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{kable_styling}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l|r|r}
+\hline
+  & 2.5 \% & 97.5 \%\\
+\hline
+SBP\_CAT & NA & NA\\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{5}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(lmtest)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'lmtest' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: zoo
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'zoo' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'zoo'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pander}\NormalTok{(}\KeywordTok{lrtest}\NormalTok{(logistic, logistic2))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ccccc@{}}
+\caption{Likelihood ratio test}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.07\columnwidth}\centering
+\#Df\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering
+LogLik\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+Df\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering
+Chisq\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
+Pr(\textgreater{}Chisq)\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.07\columnwidth}\centering
+\#Df\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\centering
+LogLik\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+Df\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\centering
+Chisq\strut
+\end{minipage} & \begin{minipage}[b]{0.16\columnwidth}\centering
+Pr(\textgreater{}Chisq)\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.07\columnwidth}\centering
+12\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
+-1379\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering
+NA\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+NA\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.07\columnwidth}\centering
+15\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\centering
+-1384\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\centering
+9.35\strut
+\end{minipage} & \begin{minipage}[t]{0.16\columnwidth}\centering
+0.02498\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+given that the p-value for this likelihood ration test is smaller than
+any reasonable significance level with a value of 0.02498, we do have
+sufficient evidence to suggest that we would prefer the second model
+that uses SBP\_CAT over the first model that does not.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{6}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ResourceSelection)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'ResourceSelection' was built under R version 3.6.3
+\end{verbatim}
+
+\begin{verbatim}
+## ResourceSelection 0.3-5   2019-07-22
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pander}\NormalTok{(}\KeywordTok{hoslem.test}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{HD_RISK, logistic2}\OperatorTok{$}\NormalTok{fitted.values, }\DataTypeTok{g =} \DecValTok{10}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ccc@{}}
+\caption{Hosmer and Lemeshow goodness of fit (GOF) test:
+\texttt{hd.complete\$HD\_RISK,\ logistic2\$fitted.values}}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\centering
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+P value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\centering
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+P value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.22\columnwidth}\centering
+8.273\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering
+8\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+0.4073\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pander}\NormalTok{(}\KeywordTok{hoslem.test}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{HD_RISK, logistic2}\OperatorTok{$}\NormalTok{fitted.values, }\DataTypeTok{g =} \DecValTok{20}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ccc@{}}
+\caption{Hosmer and Lemeshow goodness of fit (GOF) test:
+\texttt{hd.complete\$HD\_RISK,\ logistic2\$fitted.values}}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\centering
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+P value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\centering
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+P value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.22\columnwidth}\centering
+17.36\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering
+18\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+0.4988\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pander}\NormalTok{(}\KeywordTok{hoslem.test}\NormalTok{(hd.complete}\OperatorTok{$}\NormalTok{HD_RISK, logistic2}\OperatorTok{$}\NormalTok{fitted.values, }\DataTypeTok{g =} \DecValTok{30}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ccc@{}}
+\caption{Hosmer and Lemeshow goodness of fit (GOF) test:
+\texttt{hd.complete\$HD\_RISK,\ logistic2\$fitted.values}}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\centering
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+P value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+\begin{minipage}[b]{0.22\columnwidth}\centering
+Test statistic\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\centering
+df\strut
+\end{minipage} & \begin{minipage}[b]{0.13\columnwidth}\centering
+P value\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.22\columnwidth}\centering
+17.64\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\centering
+28\strut
+\end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\centering
+0.9349\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+the Hosmer-Lemeshow tests for the second logistic regression model which
+included SBP\_CAT show that as the amount of groups increases from 10 to
+20 to 30 the p-value also increases which helps to show less and less
+evidence against the current model being tested meaning that these
+values appear to support the model being a reasonable fit for the
+observed data.
+
+this test does show that in reard to the number of groups it does apeear
+to be better to have less groups as opposed to more.
+
+Question 3:
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(MASS)}
+\NormalTok{forward <-}\StringTok{ }\KeywordTok{stepAIC}\NormalTok{(}\KeywordTok{glm}\NormalTok{(HD_RISK }\OperatorTok{~}\StringTok{ }\DecValTok{1}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ hd.complete, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{), }\DataTypeTok{scope =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{upper =}  \OperatorTok{~}\StringTok{ }\NormalTok{SEX }\OperatorTok{+}\StringTok{ }\NormalTok{AGE }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(EDUC) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(SMOKER) }\OperatorTok{+}\StringTok{ }\NormalTok{CIG }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(BP_MED) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(STROKE) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(HYPER) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(DIAB) }\OperatorTok{+}\StringTok{ }\NormalTok{CHOL }\OperatorTok{+}\StringTok{ }\NormalTok{SBP }\OperatorTok{+}\StringTok{ }\NormalTok{DBP }\OperatorTok{+}\StringTok{ }\NormalTok{BMI }\OperatorTok{+}\StringTok{ }\NormalTok{HR }\OperatorTok{+}\StringTok{ }\NormalTok{GLUC, }\DataTypeTok{lower =} \OperatorTok{~}\DecValTok{1}\NormalTok{), }\DataTypeTok{direction =} \StringTok{"forward"}\NormalTok{, }\DataTypeTok{trace =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{forward}\OperatorTok{$}\NormalTok{anova}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Stepwise Model Path 
+## Analysis of Deviance Table
+## 
+## Initial Model:
+## HD_RISK ~ 1
+## 
+## Final Model:
+## HD_RISK ~ AGE + SBP + SEX + CIG + GLUC + CHOL + factor(HYPER) + 
+##     factor(STROKE)
+## 
+## 
+##               Step Df   Deviance Resid. Df Resid. Dev      AIC
+## 1                                     3657   3121.187 3123.187
+## 2            + AGE  1 200.621281      3656   2920.566 2924.566
+## 3            + SBP  1  65.007004      3655   2855.559 2861.559
+## 4            + SEX  1  49.602275      3654   2805.956 2813.956
+## 5            + CIG  1  19.987492      3653   2785.969 2795.969
+## 6           + GLUC  1  19.116019      3652   2766.853 2778.853
+## 7           + CHOL  1   4.081172      3651   2762.772 2776.772
+## 8  + factor(HYPER)  1   2.985811      3650   2759.786 2775.786
+## 9 + factor(STROKE)  1   2.286714      3649   2757.499 2775.499
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{backward <-}\StringTok{ }\KeywordTok{stepAIC}\NormalTok{(}\KeywordTok{glm}\NormalTok{(HD_RISK }\OperatorTok{~}\StringTok{ }\NormalTok{AGE }\OperatorTok{+}\StringTok{ }\NormalTok{SBP }\OperatorTok{+}\StringTok{ }\NormalTok{SEX }\OperatorTok{+}\StringTok{ }\NormalTok{CIG }\OperatorTok{+}\StringTok{ }\NormalTok{GLUC }\OperatorTok{+}\StringTok{ }\NormalTok{CHOL }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(HYPER) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{factor}\NormalTok{(STROKE), }\DataTypeTok{data =}\NormalTok{ hd.complete, }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{), }\DataTypeTok{scope =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{upper =}  \OperatorTok{~}\StringTok{ }\NormalTok{SEX }\OperatorTok{+}\StringTok{ }\NormalTok{AGE }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(EDUC) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(SMOKER) }\OperatorTok{+}\StringTok{ }\NormalTok{CIG }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(BP_MED) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(STROKE) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(HYPER) }\OperatorTok{+}\StringTok{ }\KeywordTok{factor}\NormalTok{(DIAB) }\OperatorTok{+}\StringTok{ }\NormalTok{CHOL }\OperatorTok{+}\StringTok{ }\NormalTok{SBP }\OperatorTok{+}\StringTok{ }\NormalTok{DBP }\OperatorTok{+}\StringTok{ }\NormalTok{BMI }\OperatorTok{+}\StringTok{ }\NormalTok{HR }\OperatorTok{+}\StringTok{ }\NormalTok{GLUC, }\DataTypeTok{lower =} \OperatorTok{~}\DecValTok{1}\NormalTok{), }\DataTypeTok{direction =} \StringTok{"backward"}\NormalTok{, }\DataTypeTok{trace =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{backward}\OperatorTok{$}\NormalTok{anova}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Stepwise Model Path 
+## Analysis of Deviance Table
+## 
+## Initial Model:
+## HD_RISK ~ AGE + SBP + SEX + CIG + GLUC + CHOL + factor(HYPER) + 
+##     factor(STROKE)
+## 
+## Final Model:
+## HD_RISK ~ AGE + SBP + SEX + CIG + GLUC + CHOL + factor(HYPER) + 
+##     factor(STROKE)
+## 
+## 
+##   Step Df Deviance Resid. Df Resid. Dev      AIC
+## 1                       3649   2757.499 2775.499
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#library(bestglm)}
+
+\CommentTok{#predictors <- data.frame(SEX = hd.complete$SEX, AGE = hd.complete$AGE, EDUC = hd.complete$EDUC, SMOKER = hd.complete$SMOKER, CIG = hd.complete$CIG, BP_MED = hd.complete$BP_MED, STROKE = hd.complete$STROKE, HYPER = hd.complete$HYPER, DIAB = hd.complete$DIAB, CHOL = hd.complete$CHOL, SBP = hd.complete$SBP, DBP = hd.complete$DBP, BMI = hd.complete$BMI, HR = hd.complete$HR, GLUC = hd.complete$GLUC, y = hd.complete$HD_RISK)}
+
+\CommentTok{#best.AIC <- bestglm(Xy = predictors, family = binomial, IC = "AIC", method = "exhaustive")}
+
+\CommentTok{#$BestModels}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\item
+\end{enumerate}
+
+my computer is unable to perform the required subset selection in part
+(b).
+
+
+\end{document}

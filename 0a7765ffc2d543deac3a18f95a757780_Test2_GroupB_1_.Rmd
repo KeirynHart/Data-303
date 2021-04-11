@@ -1,0 +1,234 @@
+---
+title: "DATA 303 Test 2 (Group B)"
+date:    "9:00 AM, Thursday, 11 June 2020"
+author: "NAME:Keiryn Ward Hart, ID NUMBER:300428418"
+output:
+  #html_document: default
+  pdf_document:
+    df_print: paged
+---
+
+
+
+ Use the Rmarkdown template `Test2_GroupB.Rmd` to write your solutions.  Run the Rmarkdown file to produce a PDF, and submit your PDF using the `Browse my computer` link below.
+
+
+### Q1. (Poisson regression)
+
+
+
+a. 
+
+```{r}
+smoke <- read.csv("Poisson2.csv", header = TRUE)
+smoke <- data.frame(smoke)
+
+model1 <- glm(Death ~ Smoke + Gender, family = poisson, data = smoke)
+summary(model1)
+```
+
+b. **(2 marks)** 
+
+```{r}
+Est <- summary(model1)$coefficients[,c(1)]
+se <- summary(model1)$coefficients[,c(2)]
+exp(Est[2])
+c(exp(Est[2]-1.96*se[2]), exp(Est[2]+1.96*se[2]))
+```
+when looking at the rate ratio for smoker vs non smoker we can see that smoking will increase the rate of death by around 2 times.
+
+there is 95% confidence in the fact that this increase ranges between 1.5 times and 2.7 times.
+
+c. **(2 marks)** 
+
+```{r}
+exp(Est[3])
+c(exp(Est[3]-1.96*se[3]), exp(Est[3]+1.96*se[3]))
+```
+the rate ratio calculates that for female vs male we can see that being female decreases the rate of death by around 0.9 times.
+
+there is 95% confidence that this ratio ranges from 0.69 times and 1.18 times.
+d. **(4 marks)** 
+
+```{r}
+model2 <- glm(Death ~ Smoke + Gender + (Smoke*Gender), family = poisson, data = smoke)
+summary(model2)
+
+anova(model1, model2, test = "Chisq")
+
+aic1<- AIC(model1)
+aic2<- AIC(model2)
+
+bic1 <- BIC(model1)
+bic2 <- BIC(model2)
+
+names <- c('AIC', 'BIC')
+aic <- c(aic1, aic2)
+bic <- c(bic1, bic2)
+df <- data.frame(names, an, bn)
+df
+```
+
+given that the p-value for model 2 is 0.0004 and this value is extremely small (p-value < 0.01) we can confirm that the interaction term is significant and therefore from this test it seems that model 2 is the model to choose.
+
+but when looking at the AIC and BIC values it is interesting to note that in both cases the model that should be chosen regarding aic and bic is model1 without the interaction term as both its AIC and BIC values are much smaller.
+
+e. **(3 marks)** 
+
+```{r}
+Est1 <- summary(model2)$coefficients[,c(1)]
+se1 <- summary(model2)$coefficients[,c(2)]
+exp(Est1[4])
+x=c(1,2)
+exp(Est1[2]+x*Est1[4])
+```
+
+???
+
+
+### Q2. (Ridge regression and LASSO) 
+
+
+```{r message=FALSE}
+    # Load the "glmnet" package.
+    library(glmnet)
+    # Read in the horse colic dataset, and specify the data type for each variable.
+    colic <- read.csv("Horse Colic (Training).csv", 
+                      colClasses = c(rep("factor", 2), "numeric", rep("factor", 5), 
+                                     rep("numeric", 3), rep("factor", 2)))
+```
+
+
+
+```{r message=FALSE}
+    # Read in the horse colic test dataset, and specify the data type for each variable.
+    colic.test <- read.csv("Horse Colic (Test).csv", 
+                           colClasses = c(rep("factor", 2), "numeric", rep("factor", 5), 
+                                          rep("numeric", 3), rep("factor", 2)))
+```
+
+a. **(2 marks)** 
+
+```{r}
+colic
+lm <- lm(PULSE ~ SURGERY + AGE + MUC_MEMBR + CRT + PAIN + PERISTALSIS + AB_DISTEN + PCV + PROTEIN + OUTCOME + LESION + CP_DATA, data = colic)
+summary(lm)
+```     
+     
+b. **(5 marks)** 
+
+```{r}
+
+ridge.x <- model.matrix(PULSE~., colic)[,-1]
+testx <- model.matrix(PULSE~., colic.test)[,-1]
+
+ridge.y <- colic$PULSE
+testy <- colic.test$PULSE
+
+grid <- 10^seq(10,-2, length = 100)
+ridge <- glmnet(ridge.x, ridge.y, alpha = 0, lambda = grid)
+
+plot(ridge, xvar = "lambda", label = TRUE)
+
+cv.out <- cv.glmnet(ridge.x, ridge.y, alpha = 0)
+cv.out
+plot(cv.out)
+
+bestlam <- cv.out$lambda.min
+bestlam
+log(bestlam)
+```     
+
+```{r}
+ridge.best <- predict(cv.out, type = "coefficients", s = bestlam)
+mse.ridge <- predict(cv.out, s = 5.795785, newx=testx)
+meanmse <- mean((mse.ridge-testy)^2)
+meanmse
+```         
+    
+    
+c. **(5 marks)**   
+
+```{r}
+lasso <- glmnet(ridge.x, ridge.y, alpha =1)
+
+plot(lasso, xvar = "lambda", label = TRUE)
+```     
+
+```{r}
+cv.lasso <- cv.glmnet(ridge.x, ridge.y, alpha = 1)
+cv.lasso
+plot(cv.lasso)
+``` 
+
+```{r}
+lam1se <- cv.lasso$lambda.1se
+bestlambda <- predict(cv.lasso, type="coefficients", s = lam1se)
+
+log(lam1se)
+bestlambda
+```  
+
+```{r}
+lasso.best <- predict(cv.lasso, type = "coefficients", s = lam1se)
+mse.lasso <- predict(cv.lasso, s = 5.539633, newx=testx)
+mean_lasso <- mean((mse.lasso-testy)^2)
+mean_lasso
+```  
+
+### Q3. (Logistic regression, data set continued from Q2)
+
+a. **(6 marks)** 
+    
+```{r}
+logistic <- glm(OUTCOME ~ factor(AB_DISTEN) + PULSE + factor(AGE) + factor(MUC_MEMBR), data = colic, family = binomial)
+summary(logistic)
+```     
+    
+```{r}
+a <- summary(logistic)$coefficients[,c(3,4)]
+a[5,]
+p <- summary(logistic)$coefficients[5,]
+exp(p[1])
+10 * 0.9764221
+exp(confint.default(logistic, parm = "PULSE"))
+```     
+
+the p-value for pulse is significantly small which indicates that we have sufficient evidence to suggest that B1 is significantly different from 0 which means that Pulse is a significant predictor for whether or not a horse will suvive.
+
+considering a 10bpm increase in PULSE, the corresponding estimated multiplicative change in the odds of the horse not surviving had roughly a 10% increase which would be seen as significant.
+
+the estimate if 0.9764221 falls within the confidence interval which is what we would expect and the confidence is relatively symmetric with the estimate lying around about half way between either limit in the confidence interval.
+
+
+b. **(5 marks)** 
+
+```{r}
+abdominal <- summary(logistic)$coefficients[c(2,3,4),]
+slight <- abdominal[1,]
+moderate <- abdominal[2,]
+severe <- abdominal[3,]
+
+sl <- exp(slight[1])
+mod <- exp(moderate[1])
+sev <- exp(severe[1])
+
+sl + mod
+
+mod
+
+exp(confint.default(logistic, parm = c("factor(AB_DISTEN)2")))
+```     
+    
+looking at the effect of a horse having moderate abdominal distensation we can see that a horse with moderate abdominal distensation not surviving is 0.3213935 times the odds of a horse with slight abdominal distensation surviving. this is not a very significant change in the odds from slight to moderate distensation. the confidence interval appears to not contain the estimate for moderate distensation which is quite interesting.
+
+(Im not sure whether I was meant to add the odds of the first to the second or not...)
+    
+c. **(3 marks)** 
+
+```{r}
+
+```     
+**Total marks 38**
+
+

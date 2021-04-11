@@ -1,0 +1,171 @@
+---
+title: "DATA 303: Statistics for Data Science Test 1"
+subtitle: "Question 6: Fishmarket dataset"
+author: "<YOUR NAME>"
+date: "Student ID: <YOUR STUDENT ID NUMBER>"
+fontsize: 12pt
+output:
+  pdf_document:
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message = FALSE)
+```
+
+
+```{r}
+set.seed(0)
+fish = read.csv("fishmarket.csv", header = TRUE)
+head(fish)
+```
+
+1.	**(3 marks)**  
+
+```{r message = FALSE, warning = FALSE, echo = TRUE}
+library(ggplot2)
+library(gridExtra)
+library(car)
+library(knitr)
+library(kableExtra)
+library(mgcv)
+library(plyr)
+library(broom)
+library(leaps)
+model1 <- glm(weight ~ species + vert.len + diag.len + cross.len + height + width, data = fish)
+summ(model1)
+par(mfrow=c(2,2))
+plot(model1)
+
+```
+
+Text for answer to be written here.
+  
+2.	**(3 marks)** 
+
+```{r message = FALSE, warning = FALSE, echo = TRUE}
+VIFMODEL <- 1/(1-0.9361)
+kable(vif(model1), digits = 2, caption = "VIF Values")
+VIFMODEL
+```
+
+Looking at the VIF values in this model it is clear to see from the beginning that 3 of the predictors VIF values exceed 10, these being vert.len, diag.len and cross.len.the other 3 predictors do not exceed 10 but height comes close at 7.50. the VIF model value is 15.64945 and the 3 predictors that exceeded 10 also exceed this value which indicates that the 3 predictors exceeding these limits are showing clear signs of multicolinearity.
+3.	**(3 marks)** 
+
+```{r message = FALSE, warning = FALSE, echo = TRUE}
+# Relevant R code to be written here.
+```
+
+Text for answer to be written here.
+
+4.	**(3 marks)** 
+
+```{r message = FALSE, warning = FALSE, echo = TRUE}
+gam <- gam(weight ~ species + s(vert.len) + s(diag.len) + s(cross.len) + s(height) + s(width), data = fish)
+par(mfrow=c(2,2))
+gam.check(gam, k.rep = 1000)
+
+```
+  
+There is no evidence in the list of predictors that any have a significant non linear relationships, all of the p-values are quite high which helps to show this.
+
+looking at the table of basis functions the maximum number of basis functions is 9, all of the k index values are relatively clost to 1 but width and vert.len are slightly further away from 1 by around 0.1, 
+
+the Q-Q plot shows that not all of the residuals follow a straight ine which indicates non-normality.
+
+the residuals vs linear plot indicates non linearity within the model as the residuals are not very linear which could be due to something like outliers.
+
+the histogram shows a relatively bell shape but that is expected.
+
+the response against fitted values form a very straight line but obviously it cannot be perfect because the model is not a perfect model.
+5.	**(3 marks)** 
+
+```{r message = FALSE, warning = FALSE, echo = TRUE}
+summ.gam <- summary(gam)
+kable(summ.gam$s.table, booktabs="T", digits = 3)%>%
+  kable_styling()
+plot(gam, all.terms = TRUE,rug=TRUE,residuals=FALSE,
+     pch=19, cex=0.65, scheme = 1, shade.col="lightblue", page=1)
+```
+
+looking at the table of basis functions the maximum number of basis functions is 9, all of the k index values are relatively clost to 1 but width and vert.len are slightly further away from 1 by around 0.1, in the case of the predictor height the edf value is quite close to the k value but the p-value is not significantly low, given that the edf value is close to 9 this could indicate that more basis functions could be necessary for this predictor.
+  
+6.	**(4 marks)** 
+
+```{r message = FALSE, warning = FALSE, echo = TRUE}
+bic.model1 <- BIC(model1)
+bic.model2 <- BIC(gam)
+df <- data.frame(bic.model1, bic.model2)
+df
+```
+
+when looking at the BIC values for the first and second model it is easy to see that the second model with the smooth terms is favoured over the first model and the difference is larger than 2 which means there is a positive difference favouring model 2.
+
+7.  **(3 marks)** 
+
+```{r message = FALSE, warning = FALSE, echo = TRUE}
+regit <- regsubsets(weight~., fish)
+reg.summary=summary(regit)
+pander(reg.summary$outmat)
+par(mfrow=c(2,2))
+
+plot(reg.summary$cp,xlab="Number of Variables",ylab="Cp",type='l')
+coef(regit,5)
+```
+the best model through best subset selection is the model with 5 predictors as shown above.
+8. **(3 marks)** 
+
+```{r message = FALSE, warning = FALSE, eval = FALSE }
+m1 <- glm(weight ~ species, 
+                     data = fish, family = gaussian(link = "identity"))
+
+m2 <- glm(weight ~ species +  vert.len, 
+                     data = fish, family = gaussian(link = "identity"))
+
+m3 <- glm(weight ~ species +  vert.len + diag.len, 
+                     data = fish, family = gaussian(link = "identity"))
+
+m4 <- glm(weight ~ species +  vert.len + diag.len + cross.len, 
+                     data = fish, family = gaussian(link = "identity"))
+
+m5 <- glm(weight ~ species +  vert.len + diag.len + cross.len + + height, 
+                     data = fish, family = gaussian(link = "identity"))
+
+m6 <- glm(weight ~ species  +  vert.len  + diag.len + cross.len + height + width, 
+                     data = fish, family = gaussian(link = "identity"))
+```
+
+
+
+```{r echo = TRUE}
+# Relevant R code to be written here.
+```
+
+
+Text for answer to be written here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
